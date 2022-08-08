@@ -32,13 +32,14 @@ def registro():
             password = request_body['password'],
             is_active = True
             )
+
         
         db.session.add(user)
         db.session.commit()
 
-        return "Usuario registrado"
+        return jsonify({"msg":"usuario creado"}),201
     else:
-        return "Este usuario ya existe"
+        return jsonify({"msg":"usuario ya existe"}),202
 
 @api.route('/login', methods = ['POST'])
 def login():
@@ -52,12 +53,36 @@ def login():
                 "duracion": tiempo.total_seconds(),
                 "mensaje": "Inicio de sesion correcto",
                 "token": acceso,
-                "email": request_body['email']
+                "email": request_body['email'],
+                "nombre": user.name
             })
         else:
-            return jsonify({"error": "La contraseña no es correcta"})
+            return jsonify({"error": "La contraseña no es correcta"}),400
     else:
         return jsonify({"error": "El usuario no existe"}), 400
+
+
+@api.route('/existe', methods = ['POST'])
+def existe():
+    request_body = request.get_json()
+    user = User.query.filter_by(email = request_body['email']).first()
+
+    if user is None:
+       
+        return jsonify({"msg":"usuario no existe"}),201
+    else:
+        return jsonify({"msg":"usuario ya existe"}),202
+
+
+@api.route('/privada', methods = ['GET'])
+@jwt_required()
+def privada():
+    
+    return jsonify({"msg":"Tienes permiso","permiso":True}),201
+    
+    
+
+
 
 
 

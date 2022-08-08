@@ -5,3 +5,7 @@
     one more css for each page that will contain the selected used 
     on that page only (the ones not reused in other pages).
 */
+
+* {
+    background-image: url ("https://images6.alphacoders.com/338/thumb-1920-338930.jpg");
+}
